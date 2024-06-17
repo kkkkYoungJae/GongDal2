@@ -126,7 +126,6 @@ const CalendarScreen = () => {
 
         <Calendar
           ref={calendarRef}
-          type="multi-period"
           handlePressDay={handlePressDay}
           handleMonthChange={handleMonthChange}
         />

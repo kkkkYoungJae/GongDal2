@@ -9,8 +9,9 @@ import TextInput from '@/components/TextInput';
 import MainLayout from '@/components/layouts/MainLayout';
 import { GROUP_COLORS } from '@/constants/colorPallete';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
+import { useGroup } from '@/hooks/useGroup';
 import useValidation from '@/hooks/useValidation';
-import { createGroup } from '@/services/group';
+import { createGroup, getMyGroups } from '@/services/group';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
 import { Routes } from '@/types/navigation';
@@ -41,6 +42,7 @@ const GroupCreateScreen = () => {
   const { palette } = useUIKitTheme();
   const { isGroupPasswordValid } = useValidation();
   const { setLoadingState } = useLoadingState();
+  const { setGroupState } = useGroup();
 
   const colorPickerRef = useRef<Modalize>(null);
   const actionSheetRef = useRef<Modalize>(null);
@@ -80,6 +82,7 @@ const GroupCreateScreen = () => {
       formData.append('request', JSON.stringify(data));
 
       const res = await createGroup(formData);
+      await setGroupState(await getMyGroups());
 
       navigation.replace(Routes.GroupInviteScreen, { ...res, name: data.name });
     } catch (err) {

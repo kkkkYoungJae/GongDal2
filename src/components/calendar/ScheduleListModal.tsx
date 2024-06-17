@@ -14,133 +14,137 @@ import { Portal } from 'react-native-portalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
+  groupId?: number;
   selectDay?: Date;
   scheduleList: (ISchedule | null)[];
 }
 
-const ScheduleListModal = forwardRef<Modalize, Props>(({ selectDay, scheduleList }, ref) => {
-  const { defaultHeight } = useHeaderStyle();
-  const { palette } = useUIKitTheme();
-  const { bottom } = useSafeAreaInsets();
-  const { navigation } = useAppNavigation();
+const ScheduleListModal = forwardRef<Modalize, Props>(
+  ({ groupId, selectDay, scheduleList }, ref) => {
+    const { defaultHeight } = useHeaderStyle();
+    const { palette } = useUIKitTheme();
+    const { bottom } = useSafeAreaInsets();
+    const { navigation } = useAppNavigation();
 
-  const modalRef = useRef<Modalize>(null);
+    const modalRef = useRef<Modalize>(null);
 
-  useImperativeHandle(ref, () => ({
-    open: () => {
-      modalRef.current?.open();
-    },
-    close: () => {
+    useImperativeHandle(ref, () => ({
+      open: () => {
+        modalRef.current?.open();
+      },
+      close: () => {
+        modalRef.current?.close();
+      },
+    }));
+
+    const handlePressSchedule = async (schedule: ISchedule) => {
       modalRef.current?.close();
-    },
-  }));
 
-  const handlePressSchedule = async (schedule: ISchedule) => {
-    modalRef.current?.close();
+      if (!selectDay) return null;
 
-    if (!selectDay) return null;
+      navigation.navigate(Routes.ScheduleDetailScreen, {
+        scheduleId: schedule.scheduleId,
+        selectDate: fDate(selectDay),
+      });
+    };
 
-    navigation.navigate(Routes.ScheduleDetailScreen, {
-      scheduleId: schedule.scheduleId,
-      selectDate: fDate(selectDay),
-    });
-  };
+    const handlePressNewSchedule = async () => {
+      modalRef.current?.close();
 
-  const handlePressNewSchedule = async () => {
-    modalRef.current?.close();
+      navigation.navigate(Routes.ScheduleCreateScreen, {
+        selectDate: fDate(selectDay),
+        groupId,
+      });
+    };
 
-    navigation.navigate(Routes.ScheduleCreateScreen, {
-      selectDate: fDate(selectDay),
-    });
-  };
+    const HeaderComponent = () => {
+      if (!selectDay) return null;
 
-  const HeaderComponent = () => {
-    if (!selectDay) return null;
+      return (
+        <View style={{ padding: 16, paddingTop: 32 }}>
+          <Text subtitle1 color={palette.primary}>{`${format(new Date(selectDay), 'M월 d일 (EEE)', {
+            locale: ko,
+          })}`}</Text>
+        </View>
+      );
+    };
 
-    return (
-      <View style={{ padding: 16, paddingTop: 32 }}>
-        <Text subtitle1 color={palette.primary}>{`${format(new Date(selectDay), 'M월 d일 (EEE)', {
-          locale: ko,
-        })}`}</Text>
+    const FooterComponent = () => (
+      <View style={{ padding: 16, paddingBottom: bottom + 26 }}>
+        <TouchableOpacity
+          onPress={handlePressNewSchedule}
+          style={{
+            borderRadius: 8,
+            borderColor: palette.primary,
+            borderWidth: 1,
+            alignItems: 'center',
+            padding: 16,
+            borderStyle: 'dashed',
+          }}
+        >
+          <Text color={palette.primary}>
+            {scheduleList.length > 0 ? '일정 등록' : '일정이 없어요. 새로 등록해 보세요!'}
+          </Text>
+        </TouchableOpacity>
       </View>
     );
-  };
 
-  const FooterComponent = () => (
-    <View style={{ padding: 16, paddingBottom: bottom + 26 }}>
-      <TouchableOpacity
-        onPress={handlePressNewSchedule}
-        style={{
-          borderRadius: 8,
-          borderColor: palette.primary,
-          borderWidth: 1,
-          alignItems: 'center',
-          padding: 16,
-          borderStyle: 'dashed',
-        }}
-      >
-        <Text color={palette.primary}>
-          {scheduleList.length > 0 ? '일정 등록' : '일정이 없어요. 새로 등록해 보세요!'}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
+    const renderItem = ({ item }: { item: ISchedule }) => {
+      const isAllDay = isSameMinute(new Date(item.startDate), new Date(item.endDate));
 
-  const renderItem = ({ item }: { item: ISchedule }) => {
-    const isAllDay = isSameMinute(new Date(item.startDate), new Date(item.endDate));
+      return (
+        <TouchableOpacity
+          key={item.scheduleId + ''}
+          onPress={() => handlePressSchedule(item)}
+          style={styles.itemContaier}
+        >
+          <View
+            style={[
+              styles.itemWrapper,
+              {
+                backgroundColor: item?.color || 'lightblue',
+              },
+            ]}
+          />
+          <View>
+            <Text subtitle2 style={{ marginBottom: 4 }}>
+              {item.name}
+            </Text>
+            <Text body3>
+              {isAllDay
+                ? format(item.startDate, 'M월 d일 a h:mm', { locale: ko })
+                : `${format(item.startDate, 'M월 d일 a h:mm', { locale: ko })} ~ ${format(
+                    item.endDate,
+                    'M월 d일 a h:mm',
+                    { locale: ko },
+                  )}`}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    };
 
     return (
-      <TouchableOpacity
-        key={item.scheduleId + ''}
-        onPress={() => handlePressSchedule(item)}
-        style={styles.itemContaier}
-      >
-        <View
-          style={[
-            styles.itemWrapper,
-            {
-              backgroundColor: item?.color || 'lightblue',
-            },
-          ]}
+      <Portal>
+        <Modalize
+          ref={modalRef}
+          adjustToContentHeight
+          disableScrollIfPossible={false}
+          modalTopOffset={defaultHeight}
+          HeaderComponent={<HeaderComponent />}
+          FooterComponent={<FooterComponent />}
+          handlePosition="inside"
+          flatListProps={{
+            data: scheduleList,
+            renderItem: renderItem,
+            showsVerticalScrollIndicator: false,
+            scrollEventThrottle: 16,
+          }}
         />
-        <View>
-          <Text subtitle2 style={{ marginBottom: 4 }}>
-            {item.name}
-          </Text>
-          <Text body3>
-            {isAllDay
-              ? format(item.startDate, 'M월 d일 a h:mm', { locale: ko })
-              : `${format(item.startDate, 'M월 d일 a h:mm', { locale: ko })} ~ ${format(
-                  item.endDate,
-                  'M월 d일 a h:mm',
-                  { locale: ko },
-                )}`}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      </Portal>
     );
-  };
-
-  return (
-    <Portal>
-      <Modalize
-        ref={modalRef}
-        adjustToContentHeight
-        disableScrollIfPossible={false}
-        modalTopOffset={defaultHeight}
-        HeaderComponent={<HeaderComponent />}
-        FooterComponent={<FooterComponent />}
-        handlePosition="inside"
-        flatListProps={{
-          data: scheduleList,
-          renderItem: renderItem,
-          showsVerticalScrollIndicator: false,
-          scrollEventThrottle: 16,
-        }}
-      />
-    </Portal>
-  );
-});
+  },
+);
 
 export default ScheduleListModal;
 

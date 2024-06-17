@@ -98,6 +98,10 @@ const ScheduleCreateScreen = () => {
         setStartDate(date);
         setEndDate(date);
       }
+
+      if (params.groupId) {
+        setSelectGroup(group.groupByGroupId[params.groupId]);
+      }
     })();
   }, []);
 

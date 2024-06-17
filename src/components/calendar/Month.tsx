@@ -16,11 +16,10 @@ interface Props {
   item: Date;
   onPressDate?: (date: Date) => void;
   containerHeight: number;
-  type: 'dot' | 'multi-period';
   groupId?: number;
 }
 
-const Month = ({ item, containerHeight, onPressDate, groupId, type }: Props) => {
+const Month = ({ item, containerHeight, onPressDate, groupId }: Props) => {
   const { width } = useWindowDimensions();
   const { scheduleState } = useSchedule();
 
@@ -74,18 +73,6 @@ const Month = ({ item, containerHeight, onPressDate, groupId, type }: Props) => 
     return <View style={{ flex: 1 }}>{rows}</View>;
   }, [item, scheduleState.scheduleByDate, containerHeight]);
 
-  if (type === 'dot') {
-    return (
-      <View
-        style={{
-          width: width - 32,
-          height: '100%',
-        }}
-      >
-        {renderMonth()}
-      </View>
-    );
-  }
   return (
     <View
       style={{
