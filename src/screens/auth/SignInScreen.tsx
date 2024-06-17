@@ -45,8 +45,8 @@ const SignInScreen = () => {
   const { isEmailValid } = useValidation();
   const { handleSubmit, control } = useForm<FormData>({
     defaultValues: {
-      email: 'qwer@gmai.com',
-      password: 'qwer1234!',
+      email: '',
+      password: '',
     },
   });
 
