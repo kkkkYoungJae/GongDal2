@@ -1,4 +1,5 @@
 import images from '@/assets/images';
+import lotties from '@/assets/lotties';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
 import MainLayout from '@/components/layouts/MainLayout';
@@ -10,6 +11,7 @@ import useUIKitTheme from '@/theme/useUIKitTheme';
 import { IGroup } from '@/types/group';
 import { Routes } from '@/types/navigation';
 import { parseAxiosError } from '@/utils/factory';
+import LottieView from 'lottie-react-native';
 import { useState } from 'react';
 import { RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 import DraggableFlatList, {
@@ -117,14 +119,29 @@ const GroupScreen = () => {
         </View>
       </View>
 
-      <DraggableFlatList
-        data={group.groups}
-        renderItem={renderItem}
-        containerStyle={{ flex: 1 }}
-        contentContainerStyle={{ paddingVertical: 8 }}
-        keyExtractor={(item) => String(item.groupId)}
-        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
-      />
+      {group.groups.length > 0 ? (
+        <DraggableFlatList
+          data={group.groups}
+          renderItem={renderItem}
+          containerStyle={{ flex: 1 }}
+          contentContainerStyle={{ paddingVertical: 8 }}
+          keyExtractor={(item) => String(item.groupId)}
+          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
+        />
+      ) : (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <LottieView
+            source={lotties.empty_box}
+            style={{ width: 200, height: 200 }}
+            autoPlay
+            loop
+          />
+          <Text subtitle1 style={{ marginVertical: 12 }}>
+            그룹 없음
+          </Text>
+          <Text color={palette.grey200}>상단에서 그룹에 가입하거나 그룹을 생성해보세요.</Text>
+        </View>
+      )}
     </MainLayout>
   );
 };

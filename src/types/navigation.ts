@@ -105,7 +105,7 @@ export type RouteParamsUnion =
   /** Schedule screens **/
   | {
       route: Routes.ScheduleCreateScreen;
-      params: { schedule?: IScheduleDetail; selectDate?: string };
+      params: { schedule?: IScheduleDetail; selectDate?: string; groupId?: number };
     }
   | {
       route: Routes.ScheduleDetailScreen;

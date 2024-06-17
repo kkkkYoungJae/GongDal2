@@ -167,7 +167,7 @@ const GroupDetailScreen = () => {
         onEndReached={onFeedEndReached}
         onEndReachedThreshold={32}
         ListHeaderComponent={
-          <View style={{ paddingHorizontal: 16, height: 600 }}>
+          <View style={{ paddingHorizontal: 16, height: 650 }}>
             <Text
               h1
               style={{ fontSize: DEFAULT_SCALE_FACTOR(20), marginBottom: 6, textAlign: 'center' }}
@@ -180,7 +180,6 @@ const GroupDetailScreen = () => {
               groupId={group.currentGroup?.groupId}
               handlePressDay={handlePressDay}
               handleMonthChange={handleMonthChange}
-              type="dot"
             />
           </View>
         }
@@ -197,6 +196,7 @@ const GroupDetailScreen = () => {
         ref={scheduleListModalRef}
         selectDay={selectDay}
         scheduleList={filterScheduleList()}
+        groupId={group.currentGroup?.groupId}
       />
     </MainLayout>
   );
