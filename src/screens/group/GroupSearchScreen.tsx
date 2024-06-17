@@ -22,7 +22,7 @@ const GroupSearchScreen = () => {
   const { HeaderComponent } = useHeaderStyle();
   const { navigation } = useAppNavigation();
   const { handleSubmit, control } = useForm<FormData>({
-    defaultValues: { search: 'AWZG8923' },
+    defaultValues: { search: '' },
   });
   const { palette } = useUIKitTheme();
   const { setLoadingState } = useLoadingState();
