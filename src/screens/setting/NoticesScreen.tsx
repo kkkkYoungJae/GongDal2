@@ -22,7 +22,9 @@ const NoticesScreen = () => {
     queryKey: [useQueryKey.notices],
     queryFn: ({ pageParam = 0 }) => getNotices(pageParam),
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.number + 1,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.last) return lastPage.number + 1;
+    },
   });
 
   const onEndReached = () => {

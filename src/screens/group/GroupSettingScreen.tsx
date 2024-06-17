@@ -6,8 +6,10 @@ import Text from '@/components/Text';
 import MainLayout from '@/components/layouts/MainLayout';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { useGroup } from '@/hooks/useGroup';
+import { useSchedule } from '@/hooks/useSchedule';
 import { useUserInfo } from '@/hooks/useUserInfo';
 import { deleteGroup, deleteGroupCover, getMyGroups, updateGroup } from '@/services/group';
+import { getAllSchedule } from '@/services/schedule';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
 import { groupRole } from '@/types/group';
@@ -38,6 +40,7 @@ const GroupSettingScreen = () => {
   const { HeaderComponent } = useHeaderStyle();
   const { group, updateGroupState, setGroupState } = useGroup();
   const { userInfo } = useUserInfo();
+  const { setScheduleState } = useSchedule();
 
   const colorPickerRef = useRef<Modalize>(null);
   const actionSheetRef = useRef<Modalize>(null);
@@ -181,7 +184,7 @@ const GroupSettingScreen = () => {
               onPress: () => reject('cancel request'),
             },
             {
-              text: '그룹 나가기',
+              text: '그룹 삭제',
               style: 'destructive',
               onPress: () => resolve(true),
             },
@@ -191,6 +194,12 @@ const GroupSettingScreen = () => {
       });
 
       await deleteGroup(group.currentGroup.groupId);
+      await setScheduleState(
+        await getAllSchedule({
+          start: '2024-01-01',
+          end: '2025-12-31',
+        }),
+      );
       await setGroupState(await getMyGroups());
       navigation.pop(2);
     } catch (err) {

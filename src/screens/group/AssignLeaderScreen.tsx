@@ -68,7 +68,7 @@ const AssignLeaderScreen = () => {
               onPress: () => reject('cancel request'),
             },
             {
-              text: '그룹 나가기',
+              text: '변경하기',
               style: 'destructive',
               onPress: () => resolve(true),
             },

@@ -8,6 +8,7 @@ import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { searchGroupInfo } from '@/services/group';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
+import { Routes } from '@/types/navigation';
 import { delay, parseAxiosError, showAlert } from '@/utils/factory';
 import LottieView from 'lottie-react-native';
 import { useState } from 'react';
@@ -22,7 +23,7 @@ const GroupSearchScreen = () => {
   const { HeaderComponent } = useHeaderStyle();
   const { navigation } = useAppNavigation();
   const { handleSubmit, control } = useForm<FormData>({
-    defaultValues: { search: '' },
+    defaultValues: { search: 'AWZG8923' },
   });
   const { palette } = useUIKitTheme();
   const { setLoadingState } = useLoadingState();
@@ -37,7 +38,7 @@ const GroupSearchScreen = () => {
 
       await searchGroupInfo(data.search);
 
-      // navigation.replace(Routes.GroupFrontDoorScreen, { groupKey: data.search });
+      navigation.replace(Routes.GroupFrontDoorScreen, { groupKey: data.search });
     } catch (err) {
       parseAxiosError(err);
     } finally {

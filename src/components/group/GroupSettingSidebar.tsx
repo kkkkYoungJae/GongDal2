@@ -1,7 +1,10 @@
 import images from '@/assets/images';
 import Text from '@/components/Text';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
-import { exitGroup } from '@/services/group';
+import { useGroup } from '@/hooks/useGroup';
+import { useSchedule } from '@/hooks/useSchedule';
+import { exitGroup, getMyGroups } from '@/services/group';
+import { getAllSchedule } from '@/services/schedule';
 import {
   IGetGroupMemberResponse,
   IGroupMember,
@@ -46,6 +49,8 @@ const GroupSettingSidebar = ({
   const { width } = useWindowDimensions();
   const [slideAnim] = useState(new Animated.Value(width));
   const { navigation } = useAppNavigation();
+  const { setGroupState } = useGroup();
+  const { setScheduleState } = useSchedule();
 
   useEffect(() => {
     if (isVisible) {
@@ -96,6 +101,13 @@ const GroupSettingSidebar = ({
       });
 
       await exitGroup(groupInfo?.groupId);
+      await setScheduleState(
+        await getAllSchedule({
+          start: '2024-01-01',
+          end: '2025-12-31',
+        }),
+      );
+      await setGroupState(await getMyGroups());
       navigation.goBack();
       Toast.show({
         position: 'bottom',
