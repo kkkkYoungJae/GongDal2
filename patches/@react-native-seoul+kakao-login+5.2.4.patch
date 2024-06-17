@@ -1,0 +1,16 @@
+diff --git a/node_modules/@react-native-seoul/kakao-login/src/index.d.ts b/node_modules/@react-native-seoul/kakao-login/src/index.d.ts
+index e73e9e1..e30eb69 100644
+--- a/node_modules/@react-native-seoul/kakao-login/src/index.d.ts
++++ b/node_modules/@react-native-seoul/kakao-login/src/index.d.ts
+@@ -58,9 +58,9 @@ export declare type KakaoProfileWebType = {
+         thumbnail_image: string;
+     };
+ };
+-export declare const login: (props?: KaKaoLoginWebType) => Promise<KakaoOAuthWebToken | KakaoOAuthToken>;
++export declare const login: (props?: KaKaoLoginWebType) => Promise<KakaoOAuthToken>;
+ export declare const loginWithKakaoAccount: () => Promise<KakaoOAuthToken>;
+ export declare const logout: (tokenWeb?: string) => Promise<string>;
+ export declare const unlink: (tokenWeb?: string) => Promise<string>;
+-export declare const getProfile: (token?: string) => Promise<KakaoProfileWebType | KakaoProfile>;
++export declare const getProfile: (token?: string) => Promise<KakaoProfile>;
+ export declare const getAccessToken: () => Promise<KakaoAccessTokenInfo>;

@@ -1,0 +1,288 @@
+diff --git a/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/types.d.ts b/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/types.d.ts
+index 55bc45f..ff55cb8 100644
+--- a/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/types.d.ts
++++ b/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/types.d.ts
+@@ -1,16 +1,12 @@
+ import type React from 'react';
+-import type { ViewStyle, Insets, StyleProp } from 'react-native';
++import type { Insets, StyleProp, ViewStyle } from 'react-native';
++import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
+ import type {
+-  SharedValue,
+   AnimateStyle,
++  SharedValue,
+   WithSpringConfig,
+   WithTimingConfig,
+ } from 'react-native-reanimated';
+-import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
+-import type { BottomSheetHandleProps } from '../bottomSheetHandle';
+-import type { BottomSheetBackdropProps } from '../bottomSheetBackdrop';
+-import type { BottomSheetBackgroundProps } from '../bottomSheetBackground';
+-import type { BottomSheetFooterProps } from '../bottomSheetFooter';
+ import type {
+   ANIMATION_SOURCE,
+   KEYBOARD_BEHAVIOR,
+@@ -21,6 +17,10 @@ import type {
+   GestureEventsHandlersHookType,
+   NullableAccessibilityProps,
+ } from '../../types';
++import type { BottomSheetBackdropProps } from '../bottomSheetBackdrop';
++import type { BottomSheetBackgroundProps } from '../bottomSheetBackground';
++import type { BottomSheetFooterProps } from '../bottomSheetFooter';
++import type { BottomSheetHandleProps } from '../bottomSheetHandle';
+ 
+ export interface BottomSheetProps
+   extends BottomSheetAnimationConfigs,
+@@ -276,6 +276,14 @@ export interface BottomSheetProps
+    * @type (fromIndex: number, toIndex: number) => void;
+    */
+   onAnimate?: (fromIndex: number, toIndex: number) => void;
++  /**
++   * Callback when the drag begin
++   */
++  onBegan?: ( ) => void;
++    /**
++   * Callback when the drag end
++   */
++    onEnded?: ( ) => void;
+   //#endregion
+ 
+   //#region components
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
+index f20e3dc..3a71681 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
+@@ -1,57 +1,58 @@
++import invariant from 'invariant';
+ import React, {
+-  useMemo,
+-  useCallback,
+   forwardRef,
+-  useImperativeHandle,
+   memo,
++  useCallback,
+   useEffect,
++  useImperativeHandle,
++  useMemo,
+ } from 'react';
+ import { Platform } from 'react-native';
+-import invariant from 'invariant';
++import { State } from 'react-native-gesture-handler';
+ import Animated, {
++  Extrapolate,
++  WithSpringConfig,
++  WithTimingConfig,
++  cancelAnimation,
++  interpolate,
++  runOnJS,
++  runOnUI,
+   useAnimatedReaction,
+-  useSharedValue,
+   useAnimatedStyle,
+   useDerivedValue,
+-  runOnJS,
+-  interpolate,
+-  Extrapolate,
+-  runOnUI,
+-  cancelAnimation,
++  useSharedValue,
+   useWorkletCallback,
+-  WithSpringConfig,
+-  WithTimingConfig,
+ } from 'react-native-reanimated';
+-import { State } from 'react-native-gesture-handler';
+-import {
+-  useScrollable,
+-  usePropsValidator,
+-  useReactiveSharedValue,
+-  useNormalizedSnapPoints,
+-  useKeyboard,
+-} from '../../hooks';
+ import {
+   BottomSheetInternalProvider,
+   BottomSheetProvider,
+ } from '../../contexts';
+-import BottomSheetContainer from '../bottomSheetContainer';
+-import BottomSheetGestureHandlersProvider from '../bottomSheetGestureHandlersProvider';
++import {
++  useKeyboard,
++  useNormalizedSnapPoints,
++  usePropsValidator,
++  useReactiveSharedValue,
++  useScrollable,
++} from '../../hooks';
+ import BottomSheetBackdropContainer from '../bottomSheetBackdropContainer';
+-import BottomSheetHandleContainer from '../bottomSheetHandleContainer';
+ import BottomSheetBackgroundContainer from '../bottomSheetBackgroundContainer';
+-import BottomSheetFooterContainer from '../bottomSheetFooterContainer/BottomSheetFooterContainer';
++import BottomSheetContainer from '../bottomSheetContainer';
+ import BottomSheetDraggableView from '../bottomSheetDraggableView';
++import BottomSheetFooterContainer from '../bottomSheetFooterContainer/BottomSheetFooterContainer';
++import BottomSheetGestureHandlersProvider from '../bottomSheetGestureHandlersProvider';
++import BottomSheetHandleContainer from '../bottomSheetHandleContainer';
+ // import BottomSheetDebugView from '../bottomSheetDebugView';
+ import {
++  ANIMATION_SOURCE,
+   ANIMATION_STATE,
+-  KEYBOARD_STATE,
+   KEYBOARD_BEHAVIOR,
+-  SHEET_STATE,
+-  SCROLLABLE_STATE,
+   KEYBOARD_BLUR_BEHAVIOR,
+   KEYBOARD_INPUT_MODE,
+-  ANIMATION_SOURCE,
++  KEYBOARD_STATE,
++  SCROLLABLE_STATE,
++  SHEET_STATE,
+ } from '../../constants';
++import type { BottomSheetMethods, Insets } from '../../types';
+ import {
+   animate,
+   getKeyboardAnimationConfigs,
+@@ -59,29 +60,28 @@ import {
+   print,
+ } from '../../utilities';
+ import {
+-  DEFAULT_OVER_DRAG_RESISTANCE_FACTOR,
++  DEFAULT_ACCESSIBILITY_LABEL,
++  DEFAULT_ACCESSIBILITY_ROLE,
++  DEFAULT_ACCESSIBLE,
++  DEFAULT_ANIMATE_ON_MOUNT,
++  DEFAULT_DYNAMIC_SIZING,
+   DEFAULT_ENABLE_CONTENT_PANNING_GESTURE,
+   DEFAULT_ENABLE_HANDLE_PANNING_GESTURE,
+   DEFAULT_ENABLE_OVER_DRAG,
+-  DEFAULT_ANIMATE_ON_MOUNT,
++  DEFAULT_ENABLE_PAN_DOWN_TO_CLOSE,
+   DEFAULT_KEYBOARD_BEHAVIOR,
+   DEFAULT_KEYBOARD_BLUR_BEHAVIOR,
+   DEFAULT_KEYBOARD_INPUT_MODE,
++  DEFAULT_OVER_DRAG_RESISTANCE_FACTOR,
+   INITIAL_CONTAINER_HEIGHT,
++  INITIAL_CONTAINER_OFFSET,
+   INITIAL_HANDLE_HEIGHT,
+   INITIAL_POSITION,
+   INITIAL_SNAP_POINT,
+-  DEFAULT_ENABLE_PAN_DOWN_TO_CLOSE,
+-  INITIAL_CONTAINER_OFFSET,
+-  INITIAL_VALUE,
+-  DEFAULT_DYNAMIC_SIZING,
+-  DEFAULT_ACCESSIBLE,
+-  DEFAULT_ACCESSIBILITY_LABEL,
+-  DEFAULT_ACCESSIBILITY_ROLE
++  INITIAL_VALUE
+ } from './constants';
+-import type { BottomSheetMethods, Insets } from '../../types';
+-import type { BottomSheetProps, AnimateToPositionType } from './types';
+ import { styles } from './styles';
++import type { AnimateToPositionType, BottomSheetProps } from './types';
+ 
+ Animated.addWhitelistedUIProps({
+   decelerationRate: true,
+@@ -1652,6 +1652,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
+                   <BottomSheetDraggableView
+                     key="BottomSheetRootDraggableView"
+                     style={contentContainerStyle}
++                    onBegan={props.onBegan}
++                    onEnded={props.onEnded}
+                   >
+                     {typeof Content === 'function' ? <Content /> : Content}
+ 
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/types.d.ts b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/types.d.ts
+index 55bc45f..1059dea 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/types.d.ts
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/types.d.ts
+@@ -1,16 +1,12 @@
+ import type React from 'react';
+-import type { ViewStyle, Insets, StyleProp } from 'react-native';
++import type { Insets, StyleProp, ViewStyle } from 'react-native';
++import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
+ import type {
+-  SharedValue,
+   AnimateStyle,
++  SharedValue,
+   WithSpringConfig,
+   WithTimingConfig,
+ } from 'react-native-reanimated';
+-import type { PanGestureHandlerProps } from 'react-native-gesture-handler';
+-import type { BottomSheetHandleProps } from '../bottomSheetHandle';
+-import type { BottomSheetBackdropProps } from '../bottomSheetBackdrop';
+-import type { BottomSheetBackgroundProps } from '../bottomSheetBackground';
+-import type { BottomSheetFooterProps } from '../bottomSheetFooter';
+ import type {
+   ANIMATION_SOURCE,
+   KEYBOARD_BEHAVIOR,
+@@ -21,6 +17,10 @@ import type {
+   GestureEventsHandlersHookType,
+   NullableAccessibilityProps,
+ } from '../../types';
++import type { BottomSheetBackdropProps } from '../bottomSheetBackdrop';
++import type { BottomSheetBackgroundProps } from '../bottomSheetBackground';
++import type { BottomSheetFooterProps } from '../bottomSheetFooter';
++import type { BottomSheetHandleProps } from '../bottomSheetHandle';
+ 
+ export interface BottomSheetProps
+   extends BottomSheetAnimationConfigs,
+@@ -276,6 +276,14 @@ export interface BottomSheetProps
+    * @type (fromIndex: number, toIndex: number) => void;
+    */
+   onAnimate?: (fromIndex: number, toIndex: number) => void;
++    /**
++   * Callback when the drag begin
++   */
++    onBegan?: ( ) => void;
++     /**
++   * Callback when the drag end
++   */
++     onEnded?: ( ) => void;
+   //#endregion
+ 
+   //#region components
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetDraggableView/BottomSheetDraggableView.tsx b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetDraggableView/BottomSheetDraggableView.tsx
+index 377b2d5..8b2ca24 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetDraggableView/BottomSheetDraggableView.tsx
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetDraggableView/BottomSheetDraggableView.tsx
+@@ -1,11 +1,11 @@
+-import React, { useMemo, useRef, memo } from 'react';
+-import Animated from 'react-native-reanimated';
++import React, { memo, useMemo, useRef } from 'react';
+ import { PanGestureHandler } from 'react-native-gesture-handler';
++import Animated from 'react-native-reanimated';
++import { GESTURE_SOURCE } from '../../constants';
+ import {
+   useBottomSheetGestureHandlers,
+   useBottomSheetInternal,
+ } from '../../hooks';
+-import { GESTURE_SOURCE } from '../../constants';
+ import type { BottomSheetDraggableViewProps } from './types';
+ 
+ const BottomSheetDraggableViewComponent = ({
+@@ -13,7 +13,7 @@ const BottomSheetDraggableViewComponent = ({
+   nativeGestureRef,
+   refreshControlGestureRef,
+   style,
+-  children,
++  children,onBegan,onEnded,
+   ...rest
+ }: BottomSheetDraggableViewProps) => {
+   //#region hooks
+@@ -78,6 +78,8 @@ const BottomSheetDraggableViewComponent = ({
+       activeOffsetY={activeOffsetY}
+       failOffsetX={failOffsetX}
+       failOffsetY={failOffsetY}
++      onBegan={onBegan}
++      onEnded={onEnded}
+     >
+       <Animated.View style={style} {...rest}>
+         {children}
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetDraggableView/types.d.ts b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetDraggableView/types.d.ts
+index 8d38987..3beb8de 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetDraggableView/types.d.ts
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetDraggableView/types.d.ts
+@@ -14,4 +14,6 @@ export type BottomSheetDraggableViewProps = RNViewProps & {
+   nativeGestureRef?: Ref<NativeViewGestureHandler> | null;
+   refreshControlGestureRef?: Ref<NativeViewGestureHandler> | null;
+   children: ReactNode[] | ReactNode;
++  onBegan?: ( ) => void;
++  onEnded?: ( ) => void;
+ };

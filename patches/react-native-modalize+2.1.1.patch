@@ -1,0 +1,39 @@
+diff --git a/node_modules/react-native-modalize/lib/index.js b/node_modules/react-native-modalize/lib/index.js
+index 5d5edac..ce0153c 100644
+--- a/node_modules/react-native-modalize/lib/index.js
++++ b/node_modules/react-native-modalize/lib/index.js
+@@ -576,11 +576,11 @@ onOpen, onOpened, onClose, onClosed, onBackButtonPress, onPositionChange, onOver
+                     ], pointerEvents: pointerEvents }))))));
+     };
+     React.useImperativeHandle(ref, () => ({
+-        open(dest) {
++        open(data) {
+             if (onOpen) {
+-                onOpen();
++                onOpen(data);
+             }
+-            handleAnimateOpen(alwaysOpen, dest);
++            handleAnimateOpen(alwaysOpen, data);
+         },
+         close(dest, callback) {
+             handleClose(dest, callback);
+diff --git a/node_modules/react-native-modalize/lib/options.d.ts b/node_modules/react-native-modalize/lib/options.d.ts
+index 42352fb..61ba070 100644
+--- a/node_modules/react-native-modalize/lib/options.d.ts
++++ b/node_modules/react-native-modalize/lib/options.d.ts
+@@ -1,5 +1,5 @@
+ import * as React from 'react';
+-import { Animated, ViewStyle, ScrollViewProps, FlatListProps, SectionListProps, EasingFunction, LayoutRectangle, ScrollView, FlatList, SectionList, StyleProp, ModalProps } from 'react-native';
++import { Animated, EasingFunction, FlatList, FlatListProps, LayoutRectangle, ModalProps, ScrollView, ScrollViewProps, SectionList, SectionListProps, StyleProp, ViewStyle } from 'react-native';
+ export declare type TOpen = 'default' | 'top';
+ export declare type TClose = 'default' | 'alwaysOpen';
+ export declare type TPosition = 'initial' | 'top';
+@@ -258,7 +258,7 @@ export interface IHandles {
+      * If you are using `snapPoint` prop, you can supply a `dest` argument to the `open` method, to open it
+      * to the top directly `open('top')`. You don't have to provide anything if you want the default behavior.
+      */
+-    open(dest?: TOpen): void;
++    open(data?:any): void;
+     /**
+      * The method to close Modalize. You don't need to call it to dismiss the modal, since you can swipe down to dismiss.
+      *
