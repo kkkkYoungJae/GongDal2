@@ -4,6 +4,7 @@ import Prompt from '@/components/Prompt';
 import Spacer from '@/components/Spacer';
 import Text from '@/components/Text';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
+import { useGroup } from '@/hooks/useGroup';
 import useValidation from '@/hooks/useValidation';
 import { joinGroup, searchGroupInfo } from '@/services/group';
 import { DEFAULT_SCALE_FACTOR } from '@/styles/createScaleFactor';
@@ -22,16 +23,23 @@ const GroupFrontDoorScreen = () => {
   const { navigation, params } = useAppNavigation<Routes.GroupFrontDoorScreen>();
   const { isGroupPasswordValid } = useValidation();
   const { setLoadingState } = useLoadingState();
+  const { group, setCurrentGroup } = useGroup();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [groupInfo, setGroupInfo] = useState<ISearchGroupResponse>();
+  const [allReady, setAllReady] = useState(false);
 
   useLayoutEffect(() => {
     (async () => {
       try {
         if (!params.groupKey) return;
 
-        setGroupInfo(await searchGroupInfo(params.groupKey));
+        const response = await searchGroupInfo(params.groupKey);
+        setGroupInfo(response);
+
+        if (group.groupByGroupId[response.groupId]) {
+          setAllReady(true);
+        }
       } catch (err) {
         parseAxiosError(err);
       }
@@ -41,6 +49,7 @@ const GroupFrontDoorScreen = () => {
   const handlePasswordSubmit = async (password: string) => {
     try {
       if (!groupInfo) return;
+
       if (!isGroupPasswordValid(password)) {
         return showAlert({
           content: '코드를 잘못 입력했습니다.\n영문/숫자 4~8자리로 입력해 주세요.',
@@ -50,9 +59,13 @@ const GroupFrontDoorScreen = () => {
       setLoadingState(true);
 
       await joinGroup({ groupId: groupInfo?.groupId, password });
-      console.log(password);
+      setCurrentGroup({ ...groupInfo });
+      navigation.replace(Routes.GroupDetailScreen);
     } catch (err) {
-      console.log(err);
+      parseAxiosError(err);
+      showAlert({
+        content: '코드를 잘못 입력했습니다.\n영문/숫자 4~8자리로 입력해 주세요.',
+      });
     } finally {
       setLoadingState(false);
     }
@@ -128,7 +141,12 @@ const GroupFrontDoorScreen = () => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => setPasswordVisible(true)}
+          onPress={() => {
+            if (allReady && groupInfo) {
+              setCurrentGroup({ ...groupInfo });
+              navigation.replace(Routes.GroupDetailScreen);
+            } else setPasswordVisible(true);
+          }}
           style={{
             backgroundColor: palette.primary500,
             flexDirection: 'row',
@@ -137,7 +155,12 @@ const GroupFrontDoorScreen = () => {
             padding: 18,
           }}
         >
-          <Icon icon="Fontisto" name="locked" size={20} style={{ marginRight: 8 }} />
+          <Icon
+            icon="Fontisto"
+            name={allReady ? 'unlocked' : 'locked'}
+            size={20}
+            style={{ marginRight: 8 }}
+          />
           <Text body1>그룹 참여하기</Text>
         </TouchableOpacity>
 

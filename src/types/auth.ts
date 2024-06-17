@@ -34,6 +34,7 @@ export interface IRefreshAuthTokenResponse {
 export interface IAuthState {
   userId: number;
   nickname: string;
+  notice: boolean;
   birth: string | null;
   loginId: string;
   profile: string | null;

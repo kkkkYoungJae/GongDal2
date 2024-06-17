@@ -23,3 +23,14 @@ export const readNotifications = () => {
     }
   });
 };
+
+export const updateNotification = (notice: boolean) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { data } = await api.post('/v1/notice', { notice });
+      resolve(data.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

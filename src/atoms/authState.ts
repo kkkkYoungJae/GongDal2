@@ -6,6 +6,8 @@ export const initialAuthState: IAuthState = {
   nickname: '',
   birth: null,
   loginId: '',
+  notice: false,
+  profile: null,
 };
 
 export const authState = atom<IAuthState>({

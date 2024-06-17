@@ -1,29 +1,28 @@
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
 import MainLayout from '@/components/layouts/MainLayout';
-import { asyncStorageKeys } from '@/constants/asyncStorage';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
+import { useUserInfo } from '@/hooks/useUserInfo';
+import { updateNotification } from '@/services/notification';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useLayoutEffect, useState } from 'react';
+import { parseAxiosError } from '@/utils/factory';
 import { ScrollView, StyleSheet, Switch, View } from 'react-native';
 
 const NotificationSettingScreen = () => {
   const { palette } = useUIKitTheme();
   const { HeaderComponent } = useHeaderStyle();
   const { navigation } = useAppNavigation();
+  const { userInfo, setUserInfoState } = useUserInfo();
 
-  const [isEnabled, setIsEnabled] = useState(false);
-
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-  useLayoutEffect(() => {
-    (async () => {
-      const res = await AsyncStorage.getItem(asyncStorageKeys.pushAlram);
-      setIsEnabled(res === 'true');
-    })();
-  }, []);
+  const toggleSwitch = async () => {
+    try {
+      await updateNotification(!userInfo.notice);
+      setUserInfoState({ ...userInfo, notice: !userInfo.notice });
+    } catch (err) {
+      parseAxiosError(err);
+    }
+  };
 
   return (
     <MainLayout>
@@ -37,7 +36,7 @@ const NotificationSettingScreen = () => {
           <Text subtitle2 style={{ flex: 1, paddingLeft: 6 }}>
             알림
           </Text>
-          <Switch onValueChange={toggleSwitch} value={isEnabled} />
+          <Switch onValueChange={toggleSwitch} value={userInfo.notice} />
         </View>
       </ScrollView>
     </MainLayout>
