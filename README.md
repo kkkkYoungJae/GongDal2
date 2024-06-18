@@ -42,3 +42,26 @@
 
 ## 🧑‍💻 기술적 도전 
 
+### **달력**
+
+- 좋은 사용자 경험을 주기 위해 달력의 성능, 기능 들을 비교해보고, 선택한 과정을 담았습니다.
+    - ㅎ
+ 
+### 기타
+
+
+## 기술 스택
+
+|      분류 | 스택                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| :---------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|    **Common**     | <img src="https://img.shields.io/badge/TypeScript-5.0.2-3178C6?logo=typescript&logoColor=white&color=5C5C5C&labelColor=3178C6"/> <img src="https://img.shields.io/badge/Node.js-20.9.0-339933?logo=Node.js&color=5C5C5C&labelColor=339933&logoColor=white"/> <img src="https://img.shields.io/badge/npm-10.1.0-CB3837?logo=npm&color=5C5C5C&labelColor=CB3837"/> |
+|   **FrontEnd**    | <img src="https://img.shields.io/badge/React Native-61DAFB?style=flat-square&logo=React&logoColor=black"/> <img src="https://img.shields.io/badge/React_Query-FF4154?logo=reactquery&logoColor=white"/> <img src="https://img.shields.io/badge/React_Hook_Form-EC5990?logo=reacthookform&logoColor=white"/>                                                  | 
+
+
+
+## 팀원
+
+|                                   FrontEnd                                   |                             BackEnd                                    |
+| :--------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
+| <img src="https://avatars.githubusercontent.com/u/75121415?v=4" width="100"> | <img src="https://avatars.githubusercontent.com/u/77970912?v=4" width="100"> |
+|                    [김영재](https://github.com/kkkkYoungJae)                     |                    [권예지](https://github.com/kwonyeji500)          |
