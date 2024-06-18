@@ -8,7 +8,13 @@ import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { useGroup } from '@/hooks/useGroup';
 import { useSchedule } from '@/hooks/useSchedule';
 import { useUserInfo } from '@/hooks/useUserInfo';
-import { deleteGroup, deleteGroupCover, getMyGroups, updateGroup } from '@/services/group';
+import {
+  deleteGroup,
+  deleteGroupCover,
+  getMyGroups,
+  searchGroupInfo,
+  updateGroup,
+} from '@/services/group';
 import { getAllSchedule } from '@/services/schedule';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
@@ -38,7 +44,7 @@ const GroupSettingScreen = () => {
   const { navigation } = useAppNavigation();
   const { palette } = useUIKitTheme();
   const { HeaderComponent } = useHeaderStyle();
-  const { group, updateGroupState, setGroupState } = useGroup();
+  const { group, updateGroupState, setGroupState, setCurrentGroup } = useGroup();
   const { userInfo } = useUserInfo();
   const { setScheduleState } = useSchedule();
 
@@ -84,7 +90,9 @@ const GroupSettingScreen = () => {
 
           await updateGroup(group.currentGroup?.groupId, formData);
 
-          updateGroupState({ ...group.currentGroup, cover: asset.uri });
+          const reseponse = await searchGroupInfo(group.currentGroup.key);
+          setCurrentGroup(reseponse);
+          updateGroupState({ ...group.currentGroup, cover: reseponse.cover });
         }
       });
     } catch (err) {
