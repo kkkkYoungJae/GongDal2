@@ -406,7 +406,7 @@ const SignInScreen = () => {
   );
 
   return (
-    <MainLayout style={{ backgroundColor: authMode === 'social' ? '#febca4' : undefined }}>
+    <MainLayout>
       <View style={{ padding: 24, flex: 1, justifyContent: 'flex-end' }}>
         {authMode === 'social' ? <Social /> : <Email />}
       </View>
