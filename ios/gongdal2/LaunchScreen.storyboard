@@ -21,7 +21,7 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="0.95686274770000002" green="0.74901962280000001" blue="0.65882354970000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="LzB-4y-a9f" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="21f-Cu-jfq"/>
                             <constraint firstItem="LzB-4y-a9f" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="67" id="ISK-II-vnr"/>
@@ -36,6 +36,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Cal" width="1024" height="1024"/>
+        <image name="Cal" width="512" height="512"/>
     </resources>
 </document>
