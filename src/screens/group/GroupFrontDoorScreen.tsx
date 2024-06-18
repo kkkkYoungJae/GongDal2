@@ -28,6 +28,7 @@ const GroupFrontDoorScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [groupInfo, setGroupInfo] = useState<ISearchGroupResponse>();
   const [allReady, setAllReady] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   useLayoutEffect(() => {
     (async () => {
@@ -41,7 +42,11 @@ const GroupFrontDoorScreen = () => {
           setAllReady(true);
         }
       } catch (err) {
+        showAlert({ content: '그룹을 찾을 수 없습니다.' });
+        navigation.goBack();
         parseAxiosError(err);
+      } finally {
+        setIsFetching(false);
       }
     })();
   }, []);
@@ -74,6 +79,8 @@ const GroupFrontDoorScreen = () => {
   const handlePasswordCancle = () => {
     setPasswordVisible(false);
   };
+
+  if (isFetching) return <></>;
 
   return (
     <View style={{ flex: 1 }}>
