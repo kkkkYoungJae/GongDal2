@@ -1,11 +1,9 @@
 import RootNavigator from '@/navigation/RootNavigator';
 import { setCurrentScreen } from '@/utils/log';
-import { KAKAO_APP_KEY } from '@env';
 import messaging from '@react-native-firebase/messaging';
 import {
   DarkTheme,
   DefaultTheme,
-  LinkingOptions,
   NavigationContainer,
   NavigationContainerRef,
 } from '@react-navigation/native';
@@ -29,7 +27,7 @@ import { HeaderStyleProvider } from './styles/HeaderStyleContext';
 import DarkUIKitTheme from './theme/DarkUIKitTheme';
 import LightUIKitTheme from './theme/LightUIKitTheme';
 import UIKitThemeProvider from './theme/UIKitThemeProvider';
-import { ParamListBase, Routes } from './types/navigation';
+import { Routes } from './types/navigation';
 import { GetTranslucent } from './utils/factory';
 
 QuickActions.setShortcutItems([
@@ -75,14 +73,16 @@ const App = () => {
   );
 
   const handleDeepLink = (url: string | null) => {
-    console.log('url', url);
+    console.log('Deep Link: ', url);
     if (!url) return;
     const route = url.replace(/.*?:\/\//g, '');
-    const routeName = route.split('/')[0];
 
-    // if (routeName === 'details') {
-    //   navigationRef.current?.navigate('Details');
-    // }
+    const groupKeyPrefix = 'kakaolink?groupKey=';
+
+    if (route.includes(groupKeyPrefix)) {
+      const groupKey = route.split(groupKeyPrefix)[1];
+      navigationRef.current?.navigate(Routes.GroupFrontDoorScreen, { groupKey });
+    }
   };
 
   useEffect(() => {
@@ -117,15 +117,6 @@ const App = () => {
     ),
   };
 
-  const linking: LinkingOptions<ParamListBase> = {
-    prefixes: [`kakao${KAKAO_APP_KEY}://`],
-    config: {
-      screens: {
-        GroupFrontDoorScreen: 'kakaolink',
-      },
-    },
-  };
-
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
@@ -140,7 +131,6 @@ const App = () => {
                 <StatusBar barStyle={!isLightTheme ? 'light-content' : 'dark-content'} />
                 <NavigationContainer
                   ref={navigationRef}
-                  linking={linking}
                   onReady={() =>
                     (routeNameRef.current = navigationRef.current.getCurrentRoute()?.name)
                   }

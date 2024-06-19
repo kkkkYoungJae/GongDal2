@@ -26,16 +26,21 @@
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustPan"
         android:exported="true">
-        <intent-filter  android:autoVerify="true">
+        <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:host="kakaolink"
+            android:scheme="kakao3d86e32ca7314ac5595c5f708cc90323" />
         </intent-filter>
         <intent-filter>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:host="kakaolink"
-            android:scheme="3d86e32ca7314ac5595c5f708cc90323" />
             <data android:scheme="gongdal2" />
         </intent-filter>
       </activity>
