@@ -50,6 +50,7 @@
  
 ### 기타
 - [React Native Quick Action을 사용해서 UX 향상시키기](https://velog.io/@young-jev/React-Native-Quick-Action%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%B4%EC%84%9C-UX-%ED%96%A5%EC%83%81%EC%8B%9C%ED%82%A4%EA%B8%B0)
+- [React Naitve SNS 공유와 딥링크로 사용자 경험 향상시키기](https://velog.io/@young-jev/React-Naitve-SNS-%EA%B3%B5%EC%9C%A0%EC%99%80-%EB%94%A5%EB%A7%81%ED%81%AC%EB%A1%9C-%EC%82%AC%EC%9A%A9%EC%9E%90-%EA%B2%BD%ED%97%98-%ED%96%A5%EC%83%81%EC%8B%9C%ED%82%A4%EA%B8%B0)
 
 ## 기술 스택
 
