@@ -13,12 +13,13 @@ import { Routes } from '@/types/navigation';
 import { parseAxiosError } from '@/utils/factory';
 import LottieView from 'lottie-react-native';
 import { useState } from 'react';
-import { RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
 import FastImage from 'react-native-fast-image';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 const GroupScreen = () => {
   const { defaultHeight } = useHeaderStyle();
