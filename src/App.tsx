@@ -148,9 +148,9 @@ const App = () => {
                   <Host>
                     <RootNavigator />
                     <LoadingIndicator />
+                    <Toast config={toastConfig} />
                   </Host>
                 </NavigationContainer>
-                <Toast config={toastConfig} />
               </HeaderStyleProvider>
             </UIKitThemeProvider>
           </SafeAreaProvider>
@@ -166,5 +166,4 @@ const codePushOptions: CodePushOptions = {
   mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
 };
 
-// export default codePush(codePushOptions)(App);
-export default App;
+export default codePush(codePushOptions)(App);

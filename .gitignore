@@ -326,6 +326,7 @@ gradle-app.setting
 .env
 /ios/GoogleService-Info.plist
 /android/app/google-services.json
+/android/app/src/main/AndroidManifest.xml
 /android/gradle.properties
 /android/app/src/main/res/values/strings.xml
 /ios/gongdal2/Info.plist

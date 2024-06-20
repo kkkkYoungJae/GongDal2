@@ -153,17 +153,16 @@ export const useSchedule = () => {
     if (_events.length === 0) {
       return _periodsData;
     }
-    const events = [..._events];
+    const events = _.cloneDeep(_events);
     const periodsData = _.cloneDeep(_periodsData);
     events.sort((a, b) => {
-      const startA = new Date(a.startDate);
-      const startB = new Date(b.startDate);
+      const startA = new Date(a.startDate).getTime();
+      const startB = new Date(b.startDate).getTime();
       if (startA < startB) return -1;
       if (startA > startB) return 1;
 
-      const endA = new Date(a.endDate);
-      const endB = new Date(b.endDate);
-      //@ts-ignore
+      const endA = new Date(a.endDate).getTime();
+      const endB = new Date(b.endDate).getTime();
       return endB - endA;
     });
 
