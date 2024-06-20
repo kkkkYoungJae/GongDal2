@@ -8,7 +8,7 @@ import { useUserInfo } from '@/hooks/useUserInfo';
 import { updateUserInfo } from '@/services/auth';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
-import { delay, formatDate, formatDateReverse } from '@/utils/factory';
+import { debounce, delay, formatDate, formatDateReverse } from '@/utils/factory';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Platform, ScrollView, TouchableOpacity, View } from 'react-native';
@@ -36,7 +36,7 @@ const ChangeBirthScreen = () => {
     })();
   }, []);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = debounce(async (data: FormData) => {
     try {
       if (data.birth === userInfo.birth) {
         navigation.goBack();
@@ -66,7 +66,7 @@ const ChangeBirthScreen = () => {
     } finally {
       setLoadingState(false);
     }
-  };
+  });
 
   return (
     <MainLayout>

@@ -10,7 +10,7 @@ import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
 import { IGroupMember, groupRole } from '@/types/group';
 import { Routes } from '@/types/navigation';
-import { parseAxiosError } from '@/utils/factory';
+import { debounce, parseAxiosError } from '@/utils/factory';
 import { useCallback, useMemo } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -77,7 +77,7 @@ const GroupSubLeaderScreen = () => {
     );
   }, []);
 
-  const onSubmit = () => {};
+  const onSubmit = debounce(() => {});
 
   return (
     <MainLayout>

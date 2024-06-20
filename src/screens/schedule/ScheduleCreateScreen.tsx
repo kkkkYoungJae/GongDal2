@@ -14,7 +14,7 @@ import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
 import { IGroup } from '@/types/group';
 import { Routes } from '@/types/navigation';
-import { delay, parseAxiosError, showAlert, showToast } from '@/utils/factory';
+import { debounce, delay, parseAxiosError, showAlert, showToast } from '@/utils/factory';
 import { format, isAfter, set } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useEffect, useRef, useState } from 'react';
@@ -121,7 +121,7 @@ const ScheduleCreateScreen = () => {
     })();
   }, [isShowScheduleMemo]);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = debounce(async (data: FormData) => {
     try {
       if (!data.title) {
         return showAlert({ content: '제목을 입력해 주세요!' });
@@ -174,7 +174,7 @@ const ScheduleCreateScreen = () => {
       );
       parseAxiosError(err);
     }
-  };
+  });
 
   const checkIfDateIsPast = () => {
     const newStartDate = format(startDate, 'yyyy-MM-dd HH:mm');

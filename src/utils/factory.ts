@@ -1,4 +1,3 @@
-import { ERROR_CODE } from '@/constants/errorCode';
 import { format } from 'date-fns';
 import _ from 'lodash';
 import { Alert, Platform, StatusBar, ToastAndroid } from 'react-native';
@@ -72,9 +71,7 @@ export const parseAxiosError = (error: any, init?: string) => {
     console.log('Response Status:', error.response.status);
     console.log('Response Url:', error.response.config.url);
 
-    if (ERROR_CODE[error.response?.data?.code]) {
-      showAlert({ content: ERROR_CODE[error.response?.data?.code] });
-    }
+    showAlert({ content: error.response?.data.msg });
   } else if (error.request) {
     console.log('Request made but no response was received:', error.request);
   } else {

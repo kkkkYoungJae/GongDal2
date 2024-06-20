@@ -8,7 +8,7 @@ import { useUserInfo } from '@/hooks/useUserInfo';
 import { updateUserInfo } from '@/services/auth';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
-import { delay } from '@/utils/factory';
+import { debounce, delay } from '@/utils/factory';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Platform, ScrollView, TouchableOpacity, View } from 'react-native';
@@ -37,7 +37,7 @@ const ChangeNicknameScreen = () => {
     })();
   }, []);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = debounce(async (data: FormData) => {
     try {
       if (data.nickname === userInfo.nickname) {
         navigation.goBack();
@@ -68,7 +68,7 @@ const ChangeNicknameScreen = () => {
     } finally {
       setLoadingState(false);
     }
-  };
+  });
 
   return (
     <MainLayout>

@@ -1,7 +1,7 @@
 import useKeyboard from '@/hooks/useKeyboard';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import { IGetScheduleComment } from '@/types/comment';
-import { delay, isIOS, parseAxiosError } from '@/utils/factory';
+import { debounce, delay, isIOS, parseAxiosError } from '@/utils/factory';
 import { MutableRefObject, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Modal, Platform, View } from 'react-native';
@@ -56,14 +56,14 @@ const CommentInputModal = ({
     isCommentEditMode.current = false;
   };
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = debounce(async (data: FormData) => {
     try {
       handleCommentAction(data.content);
       onClear();
     } catch (err) {
       parseAxiosError(err);
     }
-  };
+  });
 
   return (
     <Modal

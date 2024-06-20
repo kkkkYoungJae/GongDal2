@@ -8,7 +8,7 @@ import { updateGroup } from '@/services/group';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
 import { Routes } from '@/types/navigation';
-import { delay, parseAxiosError, showToast } from '@/utils/factory';
+import { debounce, delay, parseAxiosError, showToast } from '@/utils/factory';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Platform, ScrollView, TouchableOpacity, View } from 'react-native';
@@ -44,7 +44,7 @@ const ChangeGroupInfoScreen = () => {
     })();
   }, []);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = debounce(async (data: FormData) => {
     try {
       if (!group.currentGroup) {
         navigation.goBack();
@@ -75,7 +75,7 @@ const ChangeGroupInfoScreen = () => {
     } catch (err) {
       parseAxiosError(err);
     }
-  };
+  });
 
   return (
     <MainLayout>

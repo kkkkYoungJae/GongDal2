@@ -10,7 +10,7 @@ import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
 import { IGroupMember, groupRole } from '@/types/group';
 import { Routes } from '@/types/navigation';
-import { parseAxiosError } from '@/utils/factory';
+import { debounce, parseAxiosError } from '@/utils/factory';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -126,9 +126,9 @@ const AssignLeaderScreen = () => {
     [selectUser],
   );
 
-  const onSubmit = () => {
+  const onSubmit = debounce(() => {
     params.type === groupRole.leader ? handleLeader() : handleSubLeader();
-  };
+  });
 
   return (
     <MainLayout>

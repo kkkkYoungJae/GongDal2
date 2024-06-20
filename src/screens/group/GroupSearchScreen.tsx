@@ -9,7 +9,7 @@ import { searchGroupInfo } from '@/services/group';
 import useHeaderStyle from '@/styles/useHeaderStyle';
 import useUIKitTheme from '@/theme/useUIKitTheme';
 import { Routes } from '@/types/navigation';
-import { delay, parseAxiosError, showAlert } from '@/utils/factory';
+import { debounce, delay, parseAxiosError, showAlert } from '@/utils/factory';
 import LottieView from 'lottie-react-native';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -30,7 +30,7 @@ const GroupSearchScreen = () => {
 
   const [isDirty, setIsDirty] = useState(false);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = debounce(async (data: FormData) => {
     try {
       if (data.search.length !== 8) return showAlert({ content: '그룹 키값을 다시 확인해주세요.' });
 
@@ -46,7 +46,7 @@ const GroupSearchScreen = () => {
       setIsDirty(true);
       setLoadingState(false);
     }
-  };
+  });
 
   return (
     <MainLayout>
