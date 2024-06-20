@@ -30,7 +30,7 @@ const GroupSubLeaderScreen = () => {
     [group.currentGroupUsers],
   );
 
-  const handleSubLeader = async (targetId: number) => {
+  const handleSubLeader = debounce(async (targetId: number) => {
     try {
       if (!group.currentGroup) return;
 
@@ -40,7 +40,7 @@ const GroupSubLeaderScreen = () => {
     } catch (err) {
       parseAxiosError(err);
     }
-  };
+  });
 
   const renderItem = useCallback(({ item }: { item: IGroupMember }) => {
     let bgColor = '';
@@ -77,15 +77,12 @@ const GroupSubLeaderScreen = () => {
     );
   }, []);
 
-  const onSubmit = debounce(() => {});
-
   return (
     <MainLayout>
       <HeaderComponent
         left={<Icon icon="Ionicons" name="chevron-back" />}
         onPressLeft={() => navigation.goBack()}
         title="부방장 지정/해제"
-        onPressRight={onSubmit}
       />
 
       {filterList && filterList?.length > 0 ? (
@@ -103,22 +100,22 @@ const GroupSubLeaderScreen = () => {
             </Text>
             <Text body3>부방장은 그룹 멤버 내보내기와 그룹 정보를 변경 할 수 있습니다.</Text>
           </View>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate(Routes.AssignLeaderScreen, { type: groupRole.subLeader })
-            }
-            style={{
-              backgroundColor: '#eee',
-              alignItems: 'center',
-              padding: 16,
-              margin: 16,
-              borderRadius: 16,
-            }}
-          >
-            <Text subtitle1>부방장 지정하기</Text>
-          </TouchableOpacity>
         </View>
       )}
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate(Routes.AssignLeaderScreen, { type: groupRole.subLeader })
+        }
+        style={{
+          backgroundColor: '#eee',
+          alignItems: 'center',
+          padding: 16,
+          margin: 16,
+          borderRadius: 16,
+        }}
+      >
+        <Text subtitle1>부방장 지정하기</Text>
+      </TouchableOpacity>
     </MainLayout>
   );
 };

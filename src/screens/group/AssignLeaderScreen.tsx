@@ -40,7 +40,7 @@ const AssignLeaderScreen = () => {
     member: '',
   };
 
-  const handleSubLeader = async () => {
+  const handleSubLeader = debounce(async () => {
     try {
       if (!group.currentGroup || !selectUser) return;
 
@@ -51,9 +51,9 @@ const AssignLeaderScreen = () => {
     } catch (err) {
       parseAxiosError(err);
     }
-  };
+  });
 
-  const handleLeader = async () => {
+  const handleLeader = debounce(async () => {
     try {
       if (!group.currentGroup || !selectUser) return;
 
@@ -84,7 +84,7 @@ const AssignLeaderScreen = () => {
     } catch (err) {
       parseAxiosError(err);
     }
-  };
+  });
 
   const renderItem = useCallback(
     ({ item }: { item: IGroupMember }) => {
@@ -126,9 +126,9 @@ const AssignLeaderScreen = () => {
     [selectUser],
   );
 
-  const onSubmit = debounce(() => {
+  const onSubmit = () => {
     params.type === groupRole.leader ? handleLeader() : handleSubLeader();
-  });
+  };
 
   return (
     <MainLayout>

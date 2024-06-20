@@ -71,7 +71,7 @@ export const parseAxiosError = (error: any, init?: string) => {
     console.log('Response Status:', error.response.status);
     console.log('Response Url:', error.response.config.url);
 
-    showAlert({ content: error.response?.data.msg });
+    if (error?.response?.data?.msg) showAlert({ content: error.response?.data.msg });
   } else if (error.request) {
     console.log('Request made but no response was received:', error.request);
   } else {
