@@ -19,25 +19,25 @@
 **📌 내가 속한 그룹과 개인일정을 달력 형태로 볼 수 있습니다**
 
 <p align='center'>
-<img width="400" alt="달력 캡처 화면" src="https://github.com/kkkkYoungJae/GongDal2/assets/75121415/9e47b038-7b87-455f-bbd3-53964395695f">
+<img width="300" alt="달력 캡처 화면" src="https://github.com/kkkkYoungJae/GongDal2/assets/75121415/9e47b038-7b87-455f-bbd3-53964395695f">
 </p>
 
 **🗓️ 일별 일정들도 리스트로 확인할 수 있습니다**
 
 <p align='center'>
-<img width="400" alt="일정 모달 캡쳐 화면" src="https://github.com/kkkkYoungJae/GongDal2/assets/75121415/d9fca962-f2aa-45e9-9715-4d3199147b58">
+<img width="300" alt="일정 모달 캡쳐 화면" src="https://github.com/kkkkYoungJae/GongDal2/assets/75121415/d9fca962-f2aa-45e9-9715-4d3199147b58">
 </p>
 
 **👥 내가 속한 그룹의 모임을 리스트로 확인할 수 있습니다**
 
 <p align='center'>
-<img width="400" alt="그룹 리스트 캡처 화면" src="https://github.com/kkkkYoungJae/GongDal2/assets/75121415/79bfe6e5-6ae5-4dce-b5e8-92068c73c9f8">
+<img width="300" alt="그룹 리스트 캡처 화면" src="https://github.com/kkkkYoungJae/GongDal2/assets/75121415/79bfe6e5-6ae5-4dce-b5e8-92068c73c9f8">
 </p>
 
 **🔍 특정 그룹만 필터링하여 일정을 확인할 수 있습니다.**
 
 <p align='center'>
-<img width="400" alt="그룹 상세 캡처 화면" src="https://github.com/kkkkYoungJae/GongDal2/assets/75121415/66c82cdd-d35b-490c-bbac-13870c7f21b8">
+<img width="300" alt="그룹 상세 캡처 화면" src="https://github.com/kkkkYoungJae/GongDal2/assets/75121415/66c82cdd-d35b-490c-bbac-13870c7f21b8">
 </p>  
 
 ## 🧑‍💻 기술적 도전 
@@ -45,7 +45,7 @@
 ### **달력**
 
 - 좋은 사용자 경험을 주기 위해 달력의 성능, 기능 들을 비교해보고, 선택한 과정을 담았습니다.
-    - [캘린더 인터페이스 구현하기](https://velog.io/@young-jev/React-Native-%EC%BA%98%EB%A6%B0%EB%8D%94-%EC%A7%81%EC%A0%91-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0)
+    - [캘린더 인터페이스 구현하기](https://velog.io/@young-jev/%EC%BA%98%EB%A6%B0%EB%8D%94-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-%EA%B0%9C%EB%B0%9C)
     - [초기 로딩 속도가 오래걸려 컴포넌트를 캐싱하는 방법으로 로딩 시간을 62% 단축시키기](https://velog.io/@young-jev/React-Native-%EC%BA%98%EB%A6%B0%EB%8D%94-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0)
  
 ### 기타
